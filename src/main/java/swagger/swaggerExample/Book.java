@@ -1,5 +1,8 @@
 package swagger.swaggerExample;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(value = "Kitap model belgesi ", description = "Model")
 public class Book {
     private int id;
     private String bookName;

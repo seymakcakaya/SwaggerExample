@@ -1,6 +1,6 @@
 package swagger.swaggerExample;
 
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,11 +8,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Api(value = "Kitap Controller")
-
+@Api(value = "BookController", description = "Kitap Kontrol İşlemleri")
 @RequestMapping("/api/books")
 @RestController
 public class BookController {
+
+
+    @GetMapping("/getAll")
+    @ApiOperation(value = "Tüm kitapları listeler",response = List.class)
+    @ApiResponses(value={
+            @ApiResponse(code=202,message = "Sistem çalışıyor")})
+    public List<Book>getAll(){
+        return books;
+    }
+    @PostMapping("/add")
+    public String add(@RequestBody Book book) {
+        books.add(book);
+        return book.toString();
+    }
+    @GetMapping("/getByPublisherName")
+
+    public List<Book> getByPublisherName(@ApiParam(value = "Aramak istediğiniz yayın evini yazınız",required = true) @RequestParam String publisherName){
+        return books.stream().filter(x-> x.getPublisher().equals(publisherName)).collect(Collectors.toList());
+    }
     List<Book> books=new ArrayList<Book>();
     {
         books.add(new Book(1,"Fareler ve İnsanlar","SEL YAYINCILIK ","John Steinbeck ","Roman"));
@@ -22,21 +40,5 @@ public class BookController {
         books.add(new Book(5,"Sefiller","CAN YAYINLARI","Victor Hugo  ","Roman"));
 
     }
-
-    @GetMapping("/getAll")
-    public List<Book>getAll(){
-
-        return books;
-    }
-    @PostMapping("/add")
-    public String add(@RequestBody Book book) {
-        books.add(book);
-        return book.toString();
-    }
-    @GetMapping("/getByPublisherName")
-    public List<Book> getByPublisherName(@RequestParam String publisherName){
-        return books.stream().filter(x-> x.getPublisher().equals(publisherName)).collect(Collectors.toList());
-    }
-
 
 }
